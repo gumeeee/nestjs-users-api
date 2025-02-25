@@ -1,4 +1,6 @@
-import { UserDataBuilder } from '../../../testing/helpers/user-data-builder';
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { UserDataBuilder } from '@/users/domain/testing/helpers/user-data-builder';
 import { UserEntity, UserProps } from '../../user.entity';
 
 describe('User Entity', () => {
