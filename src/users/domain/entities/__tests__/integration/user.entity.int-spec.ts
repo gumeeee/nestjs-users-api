@@ -99,5 +99,23 @@ describe('UserEntity integration tests', () => {
 
       expect(() => new UserEntity(props)).toThrow(EntityValidationError);
     });
+
+    it('Should throw an error when creating a user with invalid created_at', () => {
+      let props: UserProps = {
+        ...UserDataBuilder({}),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        created_at: '2025' as any,
+      };
+
+      expect(() => new UserEntity(props)).toThrow(EntityValidationError);
+
+      props = {
+        ...UserDataBuilder({}),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        created_at: 10 as any,
+      };
+
+      expect(() => new UserEntity(props)).toThrow(EntityValidationError);
+    });
   });
 });
