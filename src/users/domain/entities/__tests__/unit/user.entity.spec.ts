@@ -6,12 +6,14 @@ describe('User Entity', () => {
   let sut: UserEntity;
 
   beforeEach(() => {
+    UserEntity.validate = jest.fn();
     props = UserDataBuilder({});
-
     sut = new UserEntity(props);
   });
 
   it('constructor method', () => {
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(UserEntity.validate).toHaveBeenCalled();
     expect(sut.props.name).toEqual(props.name);
     expect(sut.props.email).toEqual(props.email);
     expect(sut.props.password).toEqual(props.password);
@@ -55,11 +57,15 @@ describe('User Entity', () => {
 
   it('Should update a user', () => {
     sut.update('new name');
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(UserEntity.validate).toHaveBeenCalled();
     expect(sut.props.name).toEqual('new name');
   });
 
   it('Should update the password field', () => {
     sut.updatePassword('new password');
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(UserEntity.validate).toHaveBeenCalled();
     expect(sut.props.password).toEqual('new password');
   });
 });
