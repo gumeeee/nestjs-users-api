@@ -154,4 +154,34 @@ describe('UserEntity integration tests', () => {
       entity.update('new name');
     });
   });
+
+  describe('UpdatePassword method', () => {
+    it('Should a invalid user using password field', () => {
+      const entity = new UserEntity(UserDataBuilder({}));
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      expect(() => entity.updatePassword(null as any)).toThrow(
+        EntityValidationError,
+      );
+      expect(() => entity.updatePassword('')).toThrow(EntityValidationError);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      expect(() => entity.updatePassword(1 as any)).toThrow(
+        EntityValidationError,
+      );
+      expect(() => entity.updatePassword('a'.repeat(101))).toThrow(
+        EntityValidationError,
+      );
+    });
+
+    it('Should a valid user', () => {
+      expect.assertions(0);
+
+      const props: UserProps = {
+        ...UserDataBuilder({}),
+      };
+
+      const entity = new UserEntity(props);
+      entity.updatePassword('new password');
+    });
+  });
 });
