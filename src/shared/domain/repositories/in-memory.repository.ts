@@ -1,4 +1,5 @@
 import { Entity } from '../entity/entity';
+import { NotFoundError } from '../errors/not-found-error';
 import { RepositoryInterface } from './repository-contracts';
 
 export abstract class inMemoryRepository<E extends Entity>
@@ -11,15 +12,8 @@ export abstract class inMemoryRepository<E extends Entity>
     this.items.push(entity);
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async findById(id: string): Promise<E> {
-    const _id = `${id}`;
-    const entity = this.items.find(item => item.id === _id);
-
-    if (!entity) {
-      throw new Error('Entity not found');
-    }
-
+    const entity = await this._get(id);
     return entity;
   }
 
@@ -28,11 +22,27 @@ export abstract class inMemoryRepository<E extends Entity>
     return this.items;
   }
 
-  update(entity: E): Promise<void> {
-    throw new Error('Method not implemented.');
+  async update(entity: E): Promise<void> {
+    await this._get(entity.id);
+    const index = this.items.findIndex(item => item.id === entity.id);
+    this.items[index] = entity;
   }
 
-  delete(id: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  async delete(id: string): Promise<void> {
+    await this._get(id);
+    const index = this.items.findIndex(item => item.id === id);
+    this.items.splice(index, 1);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  protected async _get(id: string): Promise<E> {
+    const _id = `${id}`;
+    const entity = this.items.find(item => item.id === _id);
+
+    if (!entity) {
+      throw new NotFoundError('Entity not found');
+    }
+
+    return entity;
   }
 }
