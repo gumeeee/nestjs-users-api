@@ -4,7 +4,7 @@ import { inMemoryRepository } from '@/shared/domain/repositories/in-memory.repos
 import { UserEntity } from '@/users/domain/entities/user.entity';
 import { UserRepository } from '@/users/domain/repositories/user.repository';
 
-export class InMemoryUserRepository
+export class UserInMemoryRepository
   extends inMemoryRepository<UserEntity>
   implements UserRepository
 {
