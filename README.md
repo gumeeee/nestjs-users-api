@@ -59,33 +59,91 @@ $ pnpm run test:cov
 ## Project Structure
 
 ```bash
-src/
-  app.controller.spec.ts
-  app.controller.ts
-  app.module.ts
-  app.service.ts
-  main.ts
-  shared/
-    domain/
-      entity/
-      errors/
-      repositories/
-    infrastructure/
-      env-config/
-  users/
-    application/
-    domain/
-      entities/
-      testing/
-      validators/
-    infrastructure/
-      users.controller.ts
-      users.service.ts
-      dto/
-        create-user.dto.ts
-        update-user.dto.ts
-test/
-  jest-e2e.json
+├── .editorconfig
+├── .env.example
+├── .gitignore
+├── .prettierrc
+├── README.md
+├── eslint.config.mjs
+├── jest.config.ts
+├── nest-cli.json
+├── package.json
+├── pnpm-lock.yaml
+├── src
+    ├── app.controller.spec.ts
+    ├── app.controller.ts
+    ├── app.module.ts
+    ├── app.service.ts
+    ├── main.ts
+    ├── shared
+    │   ├── domain
+    │   │   ├── entity
+    │   │   │   ├── __tests__
+    │   │   │   │   └── unit
+    │   │   │   │   │   └── entity.spec.ts
+    │   │   │   ├── entity.ts
+    │   │   │   └── validators
+    │   │   │   │   ├── __tests__
+    │   │   │   │       ├── integration
+    │   │   │   │       │   └── class-validator-fields.int.spec.ts
+    │   │   │   │       └── unit
+    │   │   │   │       │   └── class-validator-fields.spec.ts
+    │   │   │   │   ├── class-validator-fields.ts
+    │   │   │   │   └── validator-fields.interface.ts
+    │   │   ├── errors
+    │   │   │   ├── conflict-error.ts
+    │   │   │   ├── not-found-error.ts
+    │   │   │   └── validation-error.ts
+    │   │   └── repositories
+    │   │   │   ├── __tests__
+    │   │   │       └── unit
+    │   │   │       │   └── in-memory.repository.spec.ts
+    │   │   │   ├── in-memory.repository.ts
+    │   │   │   └── repository-contracts.ts
+    │   └── infrastructure
+    │   │   └── env-config
+    │   │       ├── __tests__
+    │   │           └── unit
+    │   │           │   └── env-config.service.spec.ts
+    │   │       ├── env-config-interface.ts
+    │   │       ├── env-config.module.ts
+    │   │       └── env-config.service.ts
+    └── users
+    │   ├── domain
+    │       ├── entities
+    │       │   ├── __tests__
+    │       │   │   ├── integration
+    │       │   │   │   └── user.entity.int-spec.ts
+    │       │   │   └── unit
+    │       │   │   │   └── user.entity.spec.ts
+    │       │   └── user.entity.ts
+    │       ├── repositories
+    │       │   └── user.repository.ts
+    │       ├── testing
+    │       │   └── helpers
+    │       │   │   └── user-data-builder.ts
+    │       └── validators
+    │       │   ├── __tests__
+    │       │       └── unit
+    │       │       │   └── user.validator.spec.ts
+    │       │   └── user.validator.ts
+    │   └── infrastructure
+    │       ├── database
+    │           └── in-memory
+    │           │   └── repositories
+    │           │       └── user-in-memory.repository.ts
+    │       ├── dto
+    │           ├── create-user.dto.ts
+    │           └── update-user.dto.ts
+    │       ├── users.controller.spec.ts
+    │       ├── users.controller.ts
+    │       ├── users.module.ts
+    │       ├── users.service.spec.ts
+    │       └── users.service.ts
+├── test
+    └── jest-e2e.json
+├── tsconfig.build.json
+└── tsconfig.json
 ```
 
 ## Configuration
