@@ -18,12 +18,12 @@ export class SearchParams {
   protected _sortDirection: SortDirection | null;
   protected _filter: string | null;
 
-  constructor(props: SearchProps) {
-    this._page = props.page ?? 1;
-    this._pageSize = props.pageSize ?? 15;
-    this._sort = props.sort ?? null;
-    this._sortDirection = props.sortDirection ?? null;
-    this._filter = props.filter ?? null;
+  constructor(props: SearchProps = {}) {
+    this.page = props.page ?? 1;
+    this.pageSize = props.pageSize ?? 15;
+    this.sort = props.sort ?? null;
+    this.sortDirection = props.sortDirection ?? null;
+    this.filter = props.filter ?? null;
   }
 
   get page(): number {
@@ -31,7 +31,7 @@ export class SearchParams {
   }
 
   private set page(value: number) {
-    let _page = +value;
+    let _page = value === (true as any) ? this._page : +value;
     if (Number.isNaN(_page) || _page <= 0 || parseInt(_page as any) !== _page) {
       _page = 1;
     }
@@ -44,7 +44,7 @@ export class SearchParams {
   }
 
   private set pageSize(value: number) {
-    let _pageSize = +value;
+    let _pageSize = value === (true as any) ? this._pageSize : +value;
     if (
       Number.isNaN(_pageSize) ||
       _pageSize <= 0 ||
