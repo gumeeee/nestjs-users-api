@@ -55,5 +55,96 @@ describe('Searchable Repository unit tests', () => {
         );
       });
     });
+
+    it('sort prop', () => {
+      const sut = new SearchParams();
+      expect(sut.sort).toBeNull();
+
+      const params = [
+        { sort: null as any, expected: null },
+        { sort: undefined as any, expected: null },
+        { sort: '', expected: null },
+        { sort: 'teste', expected: 'teste' },
+        { sort: 0, expected: '0' },
+        { sort: -15, expected: '-15' },
+        { sort: 7.7, expected: '7.7' },
+        { sort: true, expected: 'true' },
+        { sort: false, expected: 'false' },
+        { sort: {}, expected: '[object Object]' },
+        { sort: 1, expected: '1' },
+        { sort: 2, expected: '2' },
+        { sort: 20, expected: '20' },
+      ];
+
+      params.forEach(param => {
+        expect(new SearchParams({ sort: param.sort }).sort).toBe(
+          param.expected,
+        );
+      });
+    });
+
+    it('sortDirection prop', () => {
+      let sut = new SearchParams();
+      expect(sut.sortDirection).toBeNull();
+
+      sut = new SearchParams({ sort: null });
+      expect(sut.sortDirection).toBeNull();
+
+      sut = new SearchParams({ sort: undefined });
+      expect(sut.sortDirection).toBeNull();
+
+      sut = new SearchParams({ sort: '' });
+      expect(sut.sortDirection).toBeNull();
+
+      const params = [
+        { sortDirection: null as any, expected: 'desc' },
+        { sortDirection: undefined as any, expected: 'desc' },
+        { sortDirection: '', expected: 'desc' },
+        { sortDirection: 'teste', expected: 'desc' },
+        { sortDirection: 0, expected: 'desc' },
+        { sortDirection: -15, expected: 'desc' },
+        { sortDirection: 7.7, expected: 'desc' },
+        { sortDirection: 'asc', expected: 'asc' },
+        { sortDirection: 'desc', expected: 'desc' },
+        { sortDirection: 'ASC', expected: 'asc' },
+        { sortDirection: 'DESC', expected: 'desc' },
+      ];
+
+      params.forEach(param => {
+        expect(
+          new SearchParams({
+            sort: 'field',
+            sortDirection: param.sortDirection,
+          }).sortDirection,
+        ).toBe(param.expected);
+      });
+    });
+
+    it('filter prop', () => {
+      const sut = new SearchParams();
+      expect(sut.filter).toBeNull();
+
+      const params = [
+        { filter: null as any, expected: null },
+        { filter: undefined as any, expected: null },
+        { filter: '', expected: null },
+        { filter: 'teste', expected: 'teste' },
+        { filter: 0, expected: '0' },
+        { filter: -15, expected: '-15' },
+        { filter: 7.7, expected: '7.7' },
+        { filter: true, expected: 'true' },
+        { filter: false, expected: 'false' },
+        { filter: {}, expected: '[object Object]' },
+        { filter: 1, expected: '1' },
+        { filter: 2, expected: '2' },
+        { filter: 20, expected: '20' },
+      ];
+
+      params.forEach(param => {
+        expect(new SearchParams({ filter: param.filter }).filter).toBe(
+          param.expected,
+        );
+      });
+    });
   });
 });
