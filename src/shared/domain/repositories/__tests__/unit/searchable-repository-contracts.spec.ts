@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { SearchParams } from '../../searchable-repository-contracts';
+import { Entity } from '@/shared/domain/entity/entity';
+import {
+  SearchParams,
+  SearchResult,
+} from '../../searchable-repository-contracts';
 
 describe('Searchable Repository unit tests', () => {
   describe('SearchParams tests', () => {
@@ -145,6 +149,76 @@ describe('Searchable Repository unit tests', () => {
           param.expected,
         );
       });
+    });
+  });
+
+  describe('SearchResult tests', () => {
+    it('constructor props', () => {
+      let sut = new SearchResult({
+        items: ['propstest1', 'propstest2', 'propstest3', 'propstest4'] as any,
+        total: 4,
+        currentPage: 1,
+        pageSize: 2,
+        sort: null,
+        sortDirection: null,
+        filter: null,
+      });
+
+      expect(sut.toJSON()).toStrictEqual({
+        items: ['propstest1', 'propstest2', 'propstest3', 'propstest4'] as any,
+        total: 4,
+        currentPage: 1,
+        pageSize: 2,
+        lastPage: 2,
+        sort: null,
+        sortDirection: null,
+        filter: null,
+      });
+
+      sut = new SearchResult<Entity<string>, null>({
+        items: ['propstest1', 'propstest2', 'propstest3', 'propstest4'] as any,
+        total: 4,
+        currentPage: 1,
+        pageSize: 2,
+        sort: 'name',
+        sortDirection: 'asc',
+        filter: 'test' as any,
+      });
+
+      expect(sut.toJSON()).toStrictEqual({
+        items: ['propstest1', 'propstest2', 'propstest3', 'propstest4'] as any,
+        total: 4,
+        currentPage: 1,
+        pageSize: 2,
+        lastPage: 2,
+        sort: 'name',
+        sortDirection: 'asc',
+        filter: 'test',
+      });
+
+      sut = new SearchResult<Entity<string>, null>({
+        items: ['propstest1', 'propstest2', 'propstest3', 'propstest4'] as any,
+        total: 4,
+        currentPage: 1,
+        pageSize: 10,
+        sort: 'name',
+        sortDirection: 'asc',
+        filter: 'test' as any,
+      });
+
+      expect(sut.lastPage).toBe(1);
+
+      sut = new SearchResult<Entity<string>, null>({
+        items: ['propstest1', 'propstest2', 'propstest3', 'propstest4'] as any,
+        total: 54,
+        currentPage: 1,
+        pageSize: 10,
+        sort: 'name',
+        sortDirection: 'asc',
+        filter: 'test' as any,
+      });
+
+      expect(sut.lastPage).toBe(6);
     });
   });
 });
