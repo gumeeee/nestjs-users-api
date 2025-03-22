@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { Entity } from '../entity/entity';
 import { inMemoryRepository } from './in-memory.repository';
 import {
@@ -41,7 +42,6 @@ export abstract class inMemorySearchableRepository<E extends Entity>
     filter: string | null,
   ): Promise<E[]>;
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   protected async applySort(
     items: E[],
     sort: string | null,
@@ -71,7 +71,10 @@ export abstract class inMemorySearchableRepository<E extends Entity>
     page: SearchParams['page'],
     pageSize: SearchParams['pageSize'],
   ): Promise<E[]> {
-    return Promise.resolve([]);
+    const start = (page - 1) * pageSize;
+    const limit = start + pageSize;
+
+    return items.slice(start, limit);
   }
 
   items: E[] = [];
