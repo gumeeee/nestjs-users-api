@@ -10,9 +10,28 @@ export abstract class inMemorySearchableRepository<E extends Entity>
   extends inMemoryRepository<E>
   implements SearchableRepositoryInterface<E, any, any>
 {
-  // eslint-disable-next-line @typescript-eslint/require-await
   async search(props: SearchParams): Promise<SearchResult<E>> {
-    throw new Error('Method not implemented.');
+    const itemsFiltered = await this.applyFilter(this.items, props.filter);
+    const itemsSorted = await this.applySort(
+      itemsFiltered,
+      props.sort,
+      props.sortDirection,
+    );
+    const itemsPaginated = await this.applyPagination(
+      itemsSorted,
+      props.page,
+      props.pageSize,
+    );
+
+    return new SearchResult({
+      items: itemsPaginated,
+      total: itemsFiltered.length,
+      currentPage: props.page,
+      pageSize: props.pageSize,
+      sort: props.sort,
+      sortDirection: props.sortDirection,
+      filter: props.filter,
+    });
   }
 
   protected abstract applyFilter(
