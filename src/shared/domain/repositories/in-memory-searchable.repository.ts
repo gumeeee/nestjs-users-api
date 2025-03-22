@@ -10,6 +10,8 @@ export abstract class inMemorySearchableRepository<E extends Entity>
   extends inMemoryRepository<E>
   implements SearchableRepositoryInterface<E, any, any>
 {
+  sortableFields: string[] = [];
+
   async search(props: SearchParams): Promise<SearchResult<E>> {
     const itemsFiltered = await this.applyFilter(this.items, props.filter);
     const itemsSorted = await this.applySort(
@@ -39,12 +41,29 @@ export abstract class inMemorySearchableRepository<E extends Entity>
     filter: string | null,
   ): Promise<E[]>;
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   protected async applySort(
     items: E[],
     sort: string | null,
     sortDirection: string | null,
   ): Promise<E[]> {
-    return Promise.resolve([]);
+    if (!sort || !this.sortableFields.includes(sort)) {
+      return items;
+    }
+
+    return [...items].sort((a, b) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (a.props[sort] < b.props[sort]) {
+        return sortDirection === 'asc' ? -1 : 1;
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (a.props[sort] > b.props[sort]) {
+        return sortDirection === 'asc' ? 1 : -1;
+      }
+
+      return 0;
+    });
   }
 
   protected async applyPagination(
