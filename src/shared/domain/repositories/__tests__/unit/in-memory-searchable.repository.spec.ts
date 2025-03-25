@@ -26,7 +26,7 @@ class StubInMemorySearchableRepository extends inMemorySearchableRepository<Stub
   }
 }
 
-describe('InMemoryRepository unit tests', () => {
+describe('InMemorySearchableRepository unit tests', () => {
   let sut: StubInMemorySearchableRepository;
 
   beforeEach(() => {
