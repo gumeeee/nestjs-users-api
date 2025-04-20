@@ -2,7 +2,7 @@ import { UserRepository } from '@/users/domain/repositories/user.repository';
 import { BadRequestError } from '../../../shared/application/errors/bad-request-error';
 import { UserEntity } from '@/users/domain/entities/user.entity';
 import { BcryptjsHashProvider } from '@/users/infrastructure/providers/hash-provider/bcryptjs-hash.provider';
-import { UserOutput } from '../dtos/user-output';
+import { UserOutput, UserOutputMapper } from '../dtos/user-output';
 import { IUseCase } from '@/shared/application/usecases/use-case';
 
 export namespace SignupUseCase {
@@ -38,7 +38,7 @@ export namespace SignupUseCase {
 
       await this.userRepository.insert(entity);
 
-      return entity.toJSON();
+      return UserOutputMapper.toOutput(entity);
     }
   }
 }
