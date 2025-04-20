@@ -11,7 +11,7 @@ export namespace DeleteUserUseCase {
   export class UseCase implements IUseCase<Input, Output> {
     constructor(private userRepository: UserRepository.Repository) {}
     async execute(input: Input): Promise<Output> {
-      const entity = await this.userRepository.delete(input.id);
+      await this.userRepository.delete(input.id);
     }
   }
 }
