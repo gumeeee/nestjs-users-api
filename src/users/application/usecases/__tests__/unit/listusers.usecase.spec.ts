@@ -84,7 +84,7 @@ describe('ListUsersUseCase unit test', () => {
     ];
 
     repository.items = items;
-    const output = await sut.execute({
+    let output = await sut.execute({
       page: 1,
       pageSize: 2,
       sort: 'name',
@@ -98,6 +98,38 @@ describe('ListUsersUseCase unit test', () => {
       currentPage: 1,
       lastPage: 2,
       pageSize: 2,
+    });
+
+    output = await sut.execute({
+      page: 2,
+      pageSize: 2,
+      sort: 'name',
+      sortDirection: 'asc',
+      filter: 'a',
+    });
+
+    expect(output).toStrictEqual({
+      items: [items[1].toJSON()],
+      total: 3,
+      currentPage: 2,
+      lastPage: 2,
+      pageSize: 2,
+    });
+
+    output = await sut.execute({
+      page: 1,
+      pageSize: 3,
+      sort: 'name',
+      sortDirection: 'desc',
+      filter: 'a',
+    });
+
+    expect(output).toStrictEqual({
+      items: [items[1].toJSON(), items[0].toJSON(), items[2].toJSON()],
+      total: 3,
+      currentPage: 1,
+      lastPage: 1,
+      pageSize: 3,
     });
   });
 });
