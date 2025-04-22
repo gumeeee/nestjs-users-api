@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Test, TestingModule } from '@nestjs/testing';
-import { UsersController } from '../../users.controller';
 import { UserOutput } from '@/users/application/dtos/user-output';
 import { SignupUseCase } from '@/users/application/usecases/signup.usecase';
 import { SignupDto } from '../../dtos/signup.dto';
+import { UsersController } from '../../users.controller';
+import { SigninUseCase } from '@/users/application/usecases/signin.usecase';
+import { SigninDto } from '../../dtos/signin.dto';
 
 describe('UsersController unit tests', () => {
   let sut: UsersController;
@@ -44,5 +45,24 @@ describe('UsersController unit tests', () => {
     expect(output).toMatchObject(result);
     expect(mockSignupUseCase.execute).toHaveBeenCalledTimes(1);
     expect(mockSignupUseCase.execute).toHaveBeenCalledWith(input);
+  });
+
+  it('should authenticate a user', async () => {
+    const output: SigninUseCase.Output = props;
+    const mockSigninUseCase = {
+      execute: jest.fn().mockReturnValue(Promise.resolve(output)),
+    };
+
+    sut['signinUseCase'] = mockSigninUseCase as any;
+
+    const input: SigninDto = {
+      email: 'test@email.com',
+      password: 'testpassword',
+    };
+    const result = await sut.login(input);
+
+    expect(output).toMatchObject(result);
+    expect(mockSigninUseCase.execute).toHaveBeenCalledTimes(1);
+    expect(mockSigninUseCase.execute).toHaveBeenCalledWith(input);
   });
 });
