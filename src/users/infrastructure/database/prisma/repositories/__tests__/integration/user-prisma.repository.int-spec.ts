@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { NotFoundError } from '@/shared/domain/errors/not-found-error';
@@ -43,5 +44,19 @@ describe('UserPrismaRepository integration tests', () => {
     const result = await sut.findById(newUser.id);
 
     expect(result.toJSON()).toStrictEqual(userEntity.toJSON());
+  });
+
+  it('should insert a new userEntity', async () => {
+    const userEntity = new UserEntity(UserDataBuilder({}));
+    await sut.insert(userEntity);
+
+    const result = await prismaService.user.findUnique({
+      where: {
+        id: userEntity._id,
+      },
+    });
+
+    expect(result).toBeDefined();
+    expect(result).toStrictEqual(userEntity.toJSON());
   });
 });
