@@ -17,7 +17,7 @@ export class DatabaseModule {
       providers: [
         {
           provide: PrismaService,
-          useFactory: (...args): PrismaService => prismaClient as PrismaService,
+          useFactory: (args): PrismaService => prismaClient as PrismaService,
         },
       ],
     };
