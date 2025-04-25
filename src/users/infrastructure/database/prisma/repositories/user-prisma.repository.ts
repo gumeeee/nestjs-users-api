@@ -44,13 +44,13 @@ export class UserPrismaRepository implements UserRepository.Repository {
             mode: 'insensitive',
           },
         },
-        orderBy: {
-          [orderByField as string]: orderByDirection,
-        },
-        skip:
-          props.page && props.page > 0 ? (props.page - 1) * props.pageSize : 1,
-        take: props.pageSize && props.pageSize > 0 ? props.pageSize : 15,
       }),
+      orderBy: {
+        [orderByField as string]: orderByDirection,
+      },
+      skip:
+        props.page && props.page > 0 ? (props.page - 1) * props.pageSize : 1,
+      take: props.pageSize && props.pageSize > 0 ? props.pageSize : 15,
     });
 
     return new UserRepository.SearchResult({

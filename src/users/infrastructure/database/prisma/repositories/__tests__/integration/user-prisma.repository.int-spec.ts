@@ -80,7 +80,7 @@ describe('UserPrismaRepository integration tests', () => {
     it('should apply only pagination when the others params are null', async () => {
       const created_at = new Date();
       const entities: UserEntity[] = [];
-      const arrange = Array(15).fill(UserDataBuilder({}));
+      const arrange = Array(16).fill(UserDataBuilder({}));
       arrange.forEach((item, index) => {
         entities.push(
           new UserEntity({
@@ -99,7 +99,8 @@ describe('UserPrismaRepository integration tests', () => {
       const searchOutput = await sut.search(new UserRepository.SearchParams());
 
       expect(searchOutput).toBeInstanceOf(UserRepository.SearchResult);
-      expect(searchOutput.total).toBe(15);
+      expect(searchOutput.total).toBe(16);
+      expect(searchOutput.items.length).toBe(15);
       searchOutput.items.forEach(item =>
         expect(item).toBeInstanceOf(UserEntity),
       );
