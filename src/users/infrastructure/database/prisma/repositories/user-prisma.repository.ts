@@ -5,7 +5,7 @@ import { UserRepository } from '@/users/domain/repositories/user.repository';
 import { UserModelMapper } from '../models/user-model.mapper';
 
 export class UserPrismaRepository implements UserRepository.Repository {
-  sortableFields: string[];
+  sortableFields: string[] = ['name', 'created_at'];
 
   constructor(private prismaService: PrismaService) {}
 
@@ -17,10 +17,51 @@ export class UserPrismaRepository implements UserRepository.Repository {
     throw new Error('Method not implemented.');
   }
 
-  search(
+  async search(
     props: UserRepository.SearchParams,
   ): Promise<UserRepository.SearchResult> {
-    throw new Error('Method not implemented.');
+    const sortable =
+      this.sortableFields?.includes(props.sort as string) || false;
+    const orderByField = sortable ? props.sort : 'created_at';
+    const orderByDirection = sortable ? props.sortDirection : 'desc';
+
+    const count = await this.prismaService.user.count({
+      ...(props.filter && {
+        where: {
+          name: {
+            contains: props.filter ?? '',
+            mode: 'insensitive',
+          },
+        },
+      }),
+    });
+
+    const userModels = await this.prismaService.user.findMany({
+      ...(props.filter && {
+        where: {
+          name: {
+            contains: props.filter ?? '',
+            mode: 'insensitive',
+          },
+        },
+        orderBy: {
+          [orderByField as string]: orderByDirection,
+        },
+        skip:
+          props.page && props.page > 0 ? (props.page - 1) * props.pageSize : 1,
+        take: props.pageSize && props.pageSize > 0 ? props.pageSize : 15,
+      }),
+    });
+
+    return new UserRepository.SearchResult({
+      items: userModels.map(userModel => UserModelMapper.toEntity(userModel)),
+      total: count,
+      currentPage: props.page,
+      pageSize: props.pageSize,
+      sort: orderByField,
+      sortDirection: orderByDirection,
+      filter: props.filter,
+    });
   }
 
   async insert(entity: UserEntity): Promise<void> {
