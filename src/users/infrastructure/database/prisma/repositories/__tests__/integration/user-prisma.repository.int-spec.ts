@@ -9,6 +9,7 @@ import { PrismaClient } from '@prisma/client';
 import { UserPrismaRepository } from '../../user-prisma.repository';
 import { UserEntity } from '@/users/domain/entities/user.entity';
 import { UserDataBuilder } from '@/users/domain/testing/helpers/user-data-builder';
+import { UserRepository } from '@/users/domain/repositories/user.repository';
 
 describe('UserPrismaRepository integration tests', () => {
   const prismaService = new PrismaClient();
@@ -74,5 +75,34 @@ describe('UserPrismaRepository integration tests', () => {
     userEntities.forEach(item =>
       expect(item.toJSON()).toStrictEqual(userEntity.toJSON()),
     );
+  });
+  describe('search method tests', () => {
+    it('should apply only pagination when the others params are null', async () => {
+      const created_at = new Date();
+      const entities: UserEntity[] = [];
+      const arrange = Array(15).fill(UserDataBuilder({}));
+      arrange.forEach((item, index) => {
+        entities.push(
+          new UserEntity({
+            ...item,
+            name: `User${index}`,
+            email: `test${index}@email.com`,
+            created_at: new Date(created_at.getTime() + index),
+          }),
+        );
+      });
+
+      await prismaService.user.createMany({
+        data: entities.map(item => item.toJSON()),
+      });
+
+      const searchOutput = await sut.search(new UserRepository.SearchParams());
+
+      expect(searchOutput).toBeInstanceOf(UserRepository.SearchResult);
+      expect(searchOutput.total).toBe(15);
+      searchOutput.items.forEach(item =>
+        expect(item).toBeInstanceOf(UserEntity),
+      );
+    });
   });
 });
