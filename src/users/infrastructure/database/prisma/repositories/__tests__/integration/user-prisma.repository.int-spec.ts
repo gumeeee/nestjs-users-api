@@ -109,5 +109,54 @@ describe('UserPrismaRepository integration tests', () => {
         expect(`test${index + 1}@email.com`).toBe(item.email);
       });
     });
+
+    it('should search using filter, sort and paginate', async () => {
+      const created_at = new Date();
+      const entities: UserEntity[] = [];
+      const arrange = ['test', 'a', 'TEST', 'b', 'TeSt'];
+      arrange.forEach((item, index) => {
+        entities.push(
+          new UserEntity({
+            ...UserDataBuilder({ name: item }),
+            created_at: new Date(created_at.getTime() + index),
+          }),
+        );
+      });
+
+      await prismaService.user.createMany({
+        data: entities.map(item => item.toJSON()),
+      });
+
+      const searchOutputPage1 = await sut.search(
+        new UserRepository.SearchParams({
+          page: 1,
+          pageSize: 2,
+          sort: 'name',
+          sortDirection: 'asc',
+          filter: 'TEST',
+        }),
+      );
+
+      expect(searchOutputPage1.items[0].toJSON()).toMatchObject(
+        entities[0].toJSON(),
+      );
+
+      expect(searchOutputPage1.items[1].toJSON()).toMatchObject(
+        entities[4].toJSON(),
+      );
+
+      const searchOutputPage2 = await sut.search(
+        new UserRepository.SearchParams({
+          page: 2,
+          pageSize: 2,
+          sort: 'name',
+          sortDirection: 'asc',
+          filter: 'TEST',
+        }),
+      );
+      expect(searchOutputPage2.items[0].toJSON()).toMatchObject(
+        entities[2].toJSON(),
+      );
+    });
   });
 });
