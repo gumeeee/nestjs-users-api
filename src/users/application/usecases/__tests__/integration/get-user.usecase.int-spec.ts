@@ -6,11 +6,11 @@ import { UserDataBuilder } from '@/users/domain/testing/helpers/user-data-builde
 import { UserPrismaRepository } from '@/users/infrastructure/database/prisma/repositories/user-prisma.repository';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
-import { DeleteUserUseCase } from '../../delete-user.usecase';
+import { GetUserUseCase } from '../../get-user.usecase';
 
-describe('DeleteUserUseCase integration tests', () => {
+describe('GetUserUseCase integration tests', () => {
   const prismaService = new PrismaClient();
-  let sut: DeleteUserUseCase.UseCase;
+  let sut: GetUserUseCase.UseCase;
   let repository: UserPrismaRepository;
   let module: TestingModule;
 
@@ -23,7 +23,7 @@ describe('DeleteUserUseCase integration tests', () => {
   });
 
   beforeEach(async () => {
-    sut = new DeleteUserUseCase.UseCase(repository);
+    sut = new GetUserUseCase.UseCase(repository);
     await prismaService.user.deleteMany();
   });
 
@@ -38,25 +38,16 @@ describe('DeleteUserUseCase integration tests', () => {
     );
   });
 
-  it('should delete a user', async () => {
+  it('should return a user', async () => {
     const entity = new UserEntity(UserDataBuilder({}));
-    await prismaService.user.create({
+    const model = await prismaService.user.create({
       data: {
         ...entity.toJSON(),
       },
     });
 
-    await sut.execute({ id: entity.id });
+    const output = await sut.execute({ id: entity.id });
 
-    const output = await prismaService.user.findUnique({
-      where: {
-        id: entity.id,
-      },
-    });
-
-    expect(output).toBeNull();
-
-    const models = await prismaService.user.findMany();
-    expect(models).toHaveLength(0);
+    expect(output).toMatchObject(model);
   });
 });
