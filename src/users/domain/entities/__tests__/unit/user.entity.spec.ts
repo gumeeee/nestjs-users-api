@@ -21,9 +21,9 @@ describe('User Entity', () => {
   });
 
   it('Getter of name field', () => {
-    expect(sut.props.name).toBeDefined();
-    expect(sut.props.name).toEqual(props.name);
-    expect(typeof sut.props.name).toBe('string');
+    expect(sut.name).toBeDefined();
+    expect(sut.name).toEqual(props.name);
+    expect(typeof sut.name).toBe('string');
   });
 
   it('Setter of name field', () => {
@@ -33,14 +33,14 @@ describe('User Entity', () => {
   });
 
   it('Getter of email field', () => {
-    expect(sut.props.email).toBeDefined();
-    expect(sut.props.email).toEqual(props.email);
+    expect(sut.email).toBeDefined();
+    expect(sut.email).toEqual(props.email);
     expect(typeof sut.props.email).toBe('string');
   });
 
   it('Getter of password field', () => {
-    expect(sut.props.password).toBeDefined();
-    expect(sut.props.password).toEqual(props.password);
+    expect(sut.password).toBeDefined();
+    expect(sut.password).toEqual(props.password);
     expect(typeof sut.props.password).toBe('string');
   });
 
@@ -51,8 +51,8 @@ describe('User Entity', () => {
   });
 
   it('Getter of created_at field', () => {
-    expect(sut.props.created_at).toBeDefined();
-    expect(sut.props.created_at).toBeInstanceOf(Date);
+    expect(sut.created_at).toBeDefined();
+    expect(sut.created_at).toBeInstanceOf(Date);
   });
 
   it('Should update a user', () => {
