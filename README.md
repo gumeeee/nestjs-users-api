@@ -63,9 +63,12 @@ $ pnpm run test:cov
 ├── .env.example
 ├── .gitignore
 ├── .prettierrc
+├── Dockerfile
 ├── README.md
+├── docker-compose.yml
 ├── eslint.config.mjs
 ├── jest.config.ts
+├── jest.int.config.ts
 ├── nest-cli.json
 ├── package.json
 ├── pnpm-lock.yaml
@@ -76,6 +79,20 @@ $ pnpm run test:cov
     ├── app.service.ts
     ├── main.ts
     ├── shared
+    │   ├── application
+    │   │   ├── dtos
+    │   │   │   ├── pagination-output.ts
+    │   │   │   ├── search-input.ts
+    │   │   │   └── unit
+    │   │   │   │   └── pagination-output.spec.ts
+    │   │   ├── errors
+    │   │   │   ├── bad-request-error.ts
+    │   │   │   ├── invalid-credentials-error.ts
+    │   │   │   └── invalid-password-error.ts
+    │   │   ├── providers
+    │   │   │   └── hash-provider.ts
+    │   │   └── usecases
+    │   │   │   └── use-case.ts
     │   ├── domain
     │   │   ├── entity
     │   │   │   ├── __tests__
@@ -97,10 +114,25 @@ $ pnpm run test:cov
     │   │   └── repositories
     │   │   │   ├── __tests__
     │   │   │       └── unit
-    │   │   │       │   └── in-memory.repository.spec.ts
+    │   │   │       │   ├── in-memory-searchable.repository.spec.ts
+    │   │   │       │   ├── in-memory.repository.spec.ts
+    │   │   │       │   └── searchable-repository-contracts.spec.ts
+    │   │   │   ├── in-memory-searchable.repository.ts
     │   │   │   ├── in-memory.repository.ts
-    │   │   │   └── repository-contracts.ts
+    │   │   │   ├── repository-contracts.ts
+    │   │   │   └── searchable-repository-contracts.ts
     │   └── infrastructure
+    │   │   ├── database
+    │   │       ├── database.module.ts
+    │   │       └── prisma
+    │   │       │   ├── migrations
+    │   │       │       ├── 20250423023938_create_users_table
+    │   │       │       │   └── migration.sql
+    │   │       │       └── migration_lock.toml
+    │   │       │   ├── prisma.service.ts
+    │   │       │   ├── schema.prisma
+    │   │       │   └── testing
+    │   │       │       └── setup-prisma-tests.ts
     │   │   └── env-config
     │   │       ├── __tests__
     │   │           └── unit
@@ -109,6 +141,33 @@ $ pnpm run test:cov
     │   │       ├── env-config.module.ts
     │   │       └── env-config.service.ts
     └── users
+    │   ├── application
+    │       ├── dtos
+    │       │   ├── __tests__
+    │       │   │   └── unit
+    │       │   │   │   └── user-output.spec.ts
+    │       │   └── user-output.ts
+    │       └── usecases
+    │       │   ├── __tests__
+    │       │       ├── integration
+    │       │       │   ├── delete-user.usecase.int-spec.ts
+    │       │       │   ├── get-user.usecase.int-spec.ts
+    │       │       │   └── signup.usecase.int-spec.ts
+    │       │       └── unit
+    │       │       │   ├── delete-user.usecase.spec.ts
+    │       │       │   ├── get-user.usecase.spec.ts
+    │       │       │   ├── listusers.usecase.spec.ts
+    │       │       │   ├── signin.usecase.spec.ts
+    │       │       │   ├── signup.usecase.spec.ts
+    │       │       │   ├── update-password.usecase.spec.ts
+    │       │       │   └── update-user.usecase.spec.ts
+    │       │   ├── delete-user.usecase.ts
+    │       │   ├── get-user.usecase.ts
+    │       │   ├── listusers.usecase.ts
+    │       │   ├── signin.usecase.ts
+    │       │   ├── signup.usecase.ts
+    │       │   ├── update-password.usecase.ts
+    │       │   └── update-user.usecase.ts
     │   ├── domain
     │       ├── entities
     │       │   ├── __tests__
@@ -128,22 +187,46 @@ $ pnpm run test:cov
     │       │       │   └── user.validator.spec.ts
     │       │   └── user.validator.ts
     │   └── infrastructure
+    │       ├── __tests__
+    │           └── unit
+    │           │   └── users.controller.spec.ts
     │       ├── database
-    │           └── in-memory
+    │           ├── in-memory
     │           │   └── repositories
-    │           │       └── user-in-memory.repository.ts
-    │       ├── dto
-    │           ├── create-user.dto.ts
+    │           │   │   ├── __tests__
+    │           │   │       └── unit
+    │           │   │       │   └── user-in-memory.repository.spec.ts
+    │           │   │   └── user-in-memory.repository.ts
+    │           └── prisma
+    │           │   ├── models
+    │           │       ├── __tests
+    │           │       │   └── integration
+    │           │       │   │   └── user-model.mapper.int-spec.ts
+    │           │       └── user-model.mapper.ts
+    │           │   └── repositories
+    │           │       ├── __tests__
+    │           │           └── integration
+    │           │           │   └── user-prisma.repository.int-spec.ts
+    │           │       └── user-prisma.repository.ts
+    │       ├── dtos
+    │           ├── list-users.dto.ts
+    │           ├── signin.dto.ts
+    │           ├── signup.dto.ts
+    │           ├── update-password.dto.ts
     │           └── update-user.dto.ts
-    │       ├── users.controller.spec.ts
+    │       ├── providers
+    │           └── hash-provider
+    │           │   ├── __tests__
+    │           │       └── unit
+    │           │       │   └── bcryptjs-hash.provider.spec.ts
+    │           │   └── bcryptjs-hash.provider.ts
     │       ├── users.controller.ts
-    │       ├── users.module.ts
-    │       ├── users.service.spec.ts
-    │       └── users.service.ts
+    │       └── users.module.ts
 ├── test
     └── jest-e2e.json
 ├── tsconfig.build.json
 └── tsconfig.json
+
 ```
 
 ## Configuration
