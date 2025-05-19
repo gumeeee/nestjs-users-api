@@ -37,7 +37,7 @@ describe('UpdatePasswordUseCase integration tests', () => {
     await prismaService.$disconnect();
   });
 
-  it('should throws error on email not exists a user model found', async () => {
+  it('should throws error on find by id when a user model not exists', async () => {
     const entity = new UserEntity(UserDataBuilder({}));
 
     await expect(() =>
