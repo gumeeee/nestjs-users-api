@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { UserOutput } from '@/users/application/dtos/user-output';
-import { SignupUseCase } from '@/users/application/usecases/signup.usecase';
-import { SignupDto } from '../../dtos/signup.dto';
-import { UsersController } from '../../users.controller';
-import { SigninUseCase } from '@/users/application/usecases/signin.usecase';
-import { SigninDto } from '../../dtos/signin.dto';
-import { UpdateUserUseCase } from '@/users/application/usecases/update-user.usecase';
-import { UpdateUserDto } from '../../dtos/update-user.dto';
-import { UpdatePasswordUseCase } from '@/users/application/usecases/update-password.usecase';
-import { UpdatePasswordDto } from '../../dtos/update-password.dto';
 import { GetUserUseCase } from '@/users/application/usecases/get-user.usecase';
 import { ListUsersUseCase } from '@/users/application/usecases/listusers.usecase';
+import { SigninUseCase } from '@/users/application/usecases/signin.usecase';
+import { SignupUseCase } from '@/users/application/usecases/signup.usecase';
+import { UpdatePasswordUseCase } from '@/users/application/usecases/update-password.usecase';
+import { UpdateUserUseCase } from '@/users/application/usecases/update-user.usecase';
 import { ListUsersDto } from '../../dtos/list-users.dto';
+import { SigninDto } from '../../dtos/signin.dto';
+import { SignupDto } from '../../dtos/signup.dto';
+import { UpdatePasswordDto } from '../../dtos/update-password.dto';
+import { UpdateUserDto } from '../../dtos/update-user.dto';
+import { UserPresenter } from '../../presenters/user.presenter';
+import { UsersController } from '../../users.controller';
 
 describe('UsersController unit tests', () => {
   let sut: UsersController;
@@ -47,9 +48,10 @@ describe('UsersController unit tests', () => {
       email: 'test@email.com',
       password: 'testpassword',
     };
-    const result = await sut.create(input);
+    const presenter = await sut.create(input);
 
-    expect(output).toMatchObject(result);
+    expect(presenter).toBeInstanceOf(UserPresenter);
+    expect(presenter).toStrictEqual(new UserPresenter(output));
     expect(mockSignupUseCase.execute).toHaveBeenCalledTimes(1);
     expect(mockSignupUseCase.execute).toHaveBeenCalledWith(input);
   });
@@ -66,9 +68,10 @@ describe('UsersController unit tests', () => {
       email: 'test@email.com',
       password: 'testpassword',
     };
-    const result = await sut.login(input);
+    const presenter = await sut.login(input);
 
-    expect(output).toMatchObject(result);
+    expect(presenter).toBeInstanceOf(UserPresenter);
+    expect(presenter).toStrictEqual(new UserPresenter(output));
     expect(mockSigninUseCase.execute).toHaveBeenCalledTimes(1);
     expect(mockSigninUseCase.execute).toHaveBeenCalledWith(input);
   });
@@ -84,9 +87,10 @@ describe('UsersController unit tests', () => {
     const input: UpdateUserDto = {
       name: 'new name test',
     };
-    const result = await sut.update(id, input);
+    const presenter = await sut.update(id, input);
 
-    expect(output).toMatchObject(result);
+    expect(presenter).toBeInstanceOf(UserPresenter);
+    expect(presenter).toStrictEqual(new UserPresenter(output));
     expect(mockUpdateUserUseCase.execute).toHaveBeenCalledTimes(1);
     expect(mockUpdateUserUseCase.execute).toHaveBeenCalledWith({
       id,
@@ -106,9 +110,11 @@ describe('UsersController unit tests', () => {
       newPassword: 'new@password@test',
       oldPassword: 'old@password@test',
     };
-    const result = await sut.updatePassword(id, input);
 
-    expect(output).toMatchObject(result);
+    const presenter = await sut.updatePassword(id, input);
+
+    expect(presenter).toBeInstanceOf(UserPresenter);
+    expect(presenter).toStrictEqual(new UserPresenter(output));
     expect(mockUpdatePasswordUseCase.execute).toHaveBeenCalledTimes(1);
     expect(mockUpdatePasswordUseCase.execute).toHaveBeenCalledWith({
       id,
@@ -141,9 +147,10 @@ describe('UsersController unit tests', () => {
 
     sut['getUserUseCase'] = mockGetUserUseCase as any;
 
-    const result = await sut.findOne(id);
+    const presenter = await sut.findOne(id);
 
-    expect(output).toStrictEqual(result);
+    expect(presenter).toBeInstanceOf(UserPresenter);
+    expect(presenter).toStrictEqual(new UserPresenter(output));
     expect(mockGetUserUseCase.execute).toHaveBeenCalledTimes(1);
     expect(mockGetUserUseCase.execute).toHaveBeenCalledWith({
       id,
