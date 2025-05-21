@@ -11,7 +11,10 @@ import { SigninDto } from '../../dtos/signin.dto';
 import { SignupDto } from '../../dtos/signup.dto';
 import { UpdatePasswordDto } from '../../dtos/update-password.dto';
 import { UpdateUserDto } from '../../dtos/update-user.dto';
-import { UserPresenter } from '../../presenters/user.presenter';
+import {
+  UserCollectionPresenter,
+  UserPresenter,
+} from '../../presenters/user.presenter';
 import { UsersController } from '../../users.controller';
 
 describe('UsersController unit tests', () => {
@@ -175,9 +178,10 @@ describe('UsersController unit tests', () => {
       page: 1,
       pageSize: 1,
     };
-    const result = await sut.search(searchParams);
+    const presenter = await sut.search(searchParams);
 
-    expect(output).toStrictEqual(result);
+    expect(presenter).toBeInstanceOf(UserCollectionPresenter);
+    expect(presenter).toEqual(new UserCollectionPresenter(output));
     expect(mockListUsersUseCase.execute).toHaveBeenCalledTimes(1);
     expect(mockListUsersUseCase.execute).toHaveBeenCalledWith(searchParams);
   });
