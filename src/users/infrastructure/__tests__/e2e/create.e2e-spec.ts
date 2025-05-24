@@ -12,6 +12,7 @@ import { DatabaseModule } from '@/shared/infrastructure/database/database.module
 import request from 'supertest';
 import { UsersController } from '../../users.controller';
 import { instanceToPlain } from 'class-transformer';
+import { applyGlobalConfig } from '@/global-config';
 
 describe('UsersController unit tests', () => {
   let app: INestApplication;
@@ -30,6 +31,7 @@ describe('UsersController unit tests', () => {
       ],
     }).compile();
     app = module.createNestApplication();
+    applyGlobalConfig(app);
     await app.init();
     repository = module.get<UserRepository.Repository>('UserRepository');
   });
