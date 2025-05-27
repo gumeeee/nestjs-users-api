@@ -57,6 +57,15 @@ $ pnpm run test:cov
 ```
 
 ## Project Structure
+This project is structured following the principles of Clean Architecture. The main layers are:
+
+- **Domain:** Contains the core business logic, entities, value objects, and interfaces for repositories. This layer is independent of any framework or infrastructure.
+- **Application:** Contains the application-specific business rules. This layer orchestrates the domain layer to perform use cases. It includes DTOs and use case classes.
+- **Infrastructure:** Contains the implementation details, such as database access, external services, and framework-specific code (NestJS controllers, modules, etc.). This layer depends on the domain and application layers.
+
+The project is organized into modules based on features (e.g., `users`). Each feature module has its own domain, application, and infrastructure layers.
+
+Here's a breakdown of the directory structure:
 
 ```bash
 ├── .editorconfig
