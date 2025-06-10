@@ -142,7 +142,12 @@ describe('UsersController unit tests', () => {
       const res = await request(app.getHttpServer())
         .post('/users')
         .send(signupDto)
-        .expect(409);
+        .expect(409)
+        .expect({
+          statusCode: 409,
+          error: 'Conflict',
+          message: 'Email addres already used',
+        });
 
       console.log(res.body);
     });
