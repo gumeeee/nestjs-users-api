@@ -16,7 +16,7 @@ import { UpdateUserDto } from '../../dtos/update-user.dto';
 import { UsersController } from '../../users.controller';
 import { UsersModule } from '../../users.module';
 
-describe('UsersController unit tests', () => {
+describe('UsersController e2e tests', () => {
   let app: INestApplication;
   let module: TestingModule;
   let repository: UserRepository.Repository;
@@ -78,19 +78,19 @@ describe('UsersController unit tests', () => {
       ]);
     });
 
-    // it('should return a erro with 422 code when the name field is invalid', async () => {
-    //   const { name, ...signUpWithoutName } = updateUserDto;
-    //   const res = await request(app.getHttpServer())
-    //     .post('/users')
-    //     .send(signUpWithoutName)
-    //     .expect(422);
+    it('should return a erro with 404 code when throw NotFoundError with invalid id', async () => {
+      const res = await request(app.getHttpServer())
+        .put('/users/fakeid')
+        .send(updateUserDto)
+        .expect(404)
+        .expect({
+          statusCode: 404,
+          error: 'Not Found',
+          message: 'UserModel not found using ID: fakeid',
+        });
 
-    //   expect(res.body.error).toBe('Unprocessable Entity');
-    //   expect(res.body.message).toEqual([
-    //     'name should not be empty',
-    //     'name must be a string',
-    //   ]);
-    // });
+      console.log(res.body);
+    });
 
     // it('should return a erro with 422 code when the email field is invalid', async () => {
     //   const { email, ...signUpWithoutEmail } = updateUserDto;
