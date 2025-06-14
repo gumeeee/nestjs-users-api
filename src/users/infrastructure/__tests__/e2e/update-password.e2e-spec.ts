@@ -140,46 +140,5 @@ describe('UsersController e2e tests', () => {
           message: 'Old password does not match',
         });
     });
-
-    // it('should return a erro with 422 code when the password field is invalid', async () => {
-    //   const { password, ...signUpWithoutPassword } = updatePasswordDto;
-    //   const res = await request(app.getHttpServer())
-    //     .post('/users')
-    //     .send(signUpWithoutPassword)
-    //     .expect(422);
-
-    //   expect(res.body.error).toBe('Unprocessable Entity');
-    //   expect(res.body.message).toEqual([
-    //     'password should not be empty',
-    //     'password must be a string',
-    //   ]);
-    // });
-
-    // it('should return a erro with 422 code with invalid field provided', async () => {
-    //   const res = await request(app.getHttpServer())
-    //     .post('/users')
-    //     .send(Object.assign(updatePasswordDto, { xpto: 'fakeValue' }))
-    //     .expect(422);
-
-    //   expect(res.body.error).toBe('Unprocessable Entity');
-    //   expect(res.body.message).toEqual(['property xpto should not exist']);
-    // });
-
-    // it('should return a erro with 409 code when the email is duplicated', async () => {
-    //   const entity = new UserEntity(UserDataBuilder({ ...updatePasswordDto }));
-    //   await repository.insert(entity);
-
-    //   const res = await request(app.getHttpServer())
-    //     .post('/users')
-    //     .send(updatePasswordDto)
-    //     .expect(409)
-    //     .expect({
-    //       statusCode: 409,
-    //       error: 'Conflict',
-    //       message: 'Email addres already used',
-    //     });
-
-    //   console.log(res.body);
-    // });
   });
 });
