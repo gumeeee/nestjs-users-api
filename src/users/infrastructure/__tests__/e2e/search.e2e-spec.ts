@@ -76,6 +76,65 @@ describe('UsersController e2e tests', () => {
       });
     });
 
+    it('should return the users ordered by created_at', async () => {
+      const entities: UserEntity[] = [];
+      const arrange = ['test', 'a', 'TEST', 'b', 'TeSt'];
+      arrange.forEach((element, index) => {
+        entities.push(
+          new UserEntity({
+            ...UserDataBuilder({}),
+            name: element,
+            email: `test${index}@email.com`,
+          }),
+        );
+      });
+
+      await prismaService.user.createMany({
+        data: entities.map(entity => entity.toJSON()),
+      });
+      let searchParams = {
+        page: 1,
+        pageSize: 2,
+        sort: 'name',
+        sortDirection: 'asc',
+        filter: 'test',
+      };
+      let queryParams = new URLSearchParams(searchParams as any).toString();
+
+      let res = await request(app.getHttpServer())
+        .get(`/users/?${queryParams}`)
+        .expect(200);
+
+      expect(Object.keys(res.body)).toStrictEqual(['data', 'meta']);
+      expect(res.body).toStrictEqual({
+        data: [entities[0].toJSON(), entities[4].toJSON()].map(entity =>
+          instanceToPlain(UsersController.userToResponse(entity)),
+        ),
+        meta: { currentPage: 1, pageSize: 2, lastPage: 2, total: 3 },
+      });
+
+      searchParams = {
+        page: 2,
+        pageSize: 2,
+        sort: 'name',
+        sortDirection: 'asc',
+        filter: 'test',
+      };
+      queryParams = new URLSearchParams(searchParams as any).toString();
+
+      res = await request(app.getHttpServer())
+        .get(`/users/?${queryParams}`)
+        .expect(200);
+
+      expect(Object.keys(res.body)).toStrictEqual(['data', 'meta']);
+      expect(res.body).toStrictEqual({
+        data: [entities[2].toJSON()].map(entity =>
+          instanceToPlain(UsersController.userToResponse(entity)),
+        ),
+        meta: { currentPage: 2, pageSize: 2, lastPage: 2, total: 3 },
+      });
+    });
+
     it('should return a erro with 422 code when the query param is invalid', async () => {
       const res = await request(app.getHttpServer())
         .get('/users/?fakeid=10')
