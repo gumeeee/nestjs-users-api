@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { applyGlobalConfig } from '@/global-config';
+import { HashProvider } from '@/shared/application/providers/hash-provider';
 import { DatabaseModule } from '@/shared/infrastructure/database/database.module';
 import { setupPrismaTests } from '@/shared/infrastructure/database/prisma/testing/setup-prisma-tests';
 import { EnvConfigModule } from '@/shared/infrastructure/env-config/env-config.module';
@@ -10,13 +11,10 @@ import { UserDataBuilder } from '@/users/domain/testing/helpers/user-data-builde
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
-import { instanceToPlain } from 'class-transformer';
 import request from 'supertest';
 import { UpdatePasswordDto } from '../../dtos/update-password.dto';
-import { UsersController } from '../../users.controller';
-import { UsersModule } from '../../users.module';
-import { HashProvider } from '@/shared/application/providers/hash-provider';
 import { BcryptjsHashProvider } from '../../providers/hash-provider/bcryptjs-hash.provider';
+import { UsersModule } from '../../users.module';
 
 describe('UsersController e2e tests', () => {
   let app: INestApplication;
@@ -89,34 +87,59 @@ describe('UsersController e2e tests', () => {
       ]);
     });
 
-    // it('should return a erro with 422 code when the name field is invalid', async () => {
-    //   const { name, ...signUpWithoutName } = updatePasswordDto;
-    //   const res = await request(app.getHttpServer())
-    //     .post('/users')
-    //     .send(signUpWithoutName)
-    //     .expect(422);
+    it('should return a erro with 404 code when throw NotFoundError with invalida id', async () => {
+      const res = await request(app.getHttpServer())
+        .patch(`/users/fakeId`)
+        .send(updatePasswordDto)
+        .expect(404);
 
-    //   expect(res.body.error).toBe('Unprocessable Entity');
-    //   expect(res.body.message).toEqual([
-    //     'name should not be empty',
-    //     'name must be a string',
-    //   ]);
-    // });
+      expect(res.body.error).toBe('Not Found');
+      expect(res.body.message).toEqual('UserModel not found using ID: fakeId');
+    });
 
-    // it('should return a erro with 422 code when the email field is invalid', async () => {
-    //   const { email, ...signUpWithoutEmail } = updatePasswordDto;
-    //   const res = await request(app.getHttpServer())
-    //     .post('/users')
-    //     .send(signUpWithoutEmail)
-    //     .expect(422);
+    it('should return a erro with 422 code when the newPassword field is invalid', async () => {
+      const { newPassword, ...oldPassword } = updatePasswordDto;
 
-    //   expect(res.body.error).toBe('Unprocessable Entity');
-    //   expect(res.body.message).toEqual([
-    //     'email must be an email',
-    //     'email should not be empty',
-    //     'email must be a string',
-    //   ]);
-    // });
+      const res = await request(app.getHttpServer())
+        .patch(`/users/${entity.id}`)
+        .send(oldPassword)
+        .expect(422);
+
+      expect(res.body.error).toBe('Unprocessable Entity');
+      expect(res.body.message).toEqual([
+        'newPassword should not be empty',
+        'newPassword must be a string',
+      ]);
+    });
+
+    it('should return a erro with 422 code when the oldPassword field is invalid', async () => {
+      const { oldPassword, ...newPassword } = updatePasswordDto;
+
+      const res = await request(app.getHttpServer())
+        .patch(`/users/${entity.id}`)
+        .send(newPassword)
+        .expect(422);
+
+      expect(res.body.error).toBe('Unprocessable Entity');
+      expect(res.body.message).toEqual([
+        'oldPassword should not be empty',
+        'oldPassword must be a string',
+      ]);
+    });
+
+    it('should return a erro with 422 code when the oldPassword does not match', async () => {
+      updatePasswordDto.oldPassword = 'wrongPassword';
+
+      const res = await request(app.getHttpServer())
+        .patch(`/users/${entity.id}`)
+        .send(updatePasswordDto)
+        .expect(422)
+        .expect({
+          statusCode: 422,
+          error: 'Unprocessable Entity',
+          message: 'Old password does not match',
+        });
+    });
 
     // it('should return a erro with 422 code when the password field is invalid', async () => {
     //   const { password, ...signUpWithoutPassword } = updatePasswordDto;
