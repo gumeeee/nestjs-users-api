@@ -11,8 +11,11 @@ export class WrapperDataInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map(body => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment
-        return !body || 'meta' in body ? body : { data: body };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return !body || 'acessToken' in body || 'meta' in body
+          ? body
+          : // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            { data: body };
       }),
     );
   }
