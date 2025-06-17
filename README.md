@@ -1,266 +1,164 @@
+# NestJS Clean Architecture
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+[![NestJS](https://img.shields.io/badge/NestJS-EA2845?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white)](https://jestjs.io/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
-<p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-<p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-<a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-<a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
+## 📋 Descrição
 
-## Description
+Este projeto é uma aplicação NestJS que implementa os princípios da Clean Architecture, oferecendo uma estrutura organizada e escalável para desenvolvimento de aplicações backend. O projeto segue as melhores práticas de desenvolvimento, incluindo testes unitários, de integração e e2e.
 
-This project is a NestJS application following the Clean Architecture principles.
+## 🚀 Tecnologias
 
-## Project setup
+- [NestJS](https://nestjs.com/) - Framework Node.js progressivo
+- [TypeScript](https://www.typescriptlang.org/) - Superset JavaScript tipado
+- [Prisma](https://www.prisma.io/) - ORM moderno para Node.js e TypeScript
+- [Jest](https://jestjs.io/) - Framework de testes
+- [Docker](https://www.docker.com/) - Plataforma de containerização
+- [PNPM](https://pnpm.io/) - Gerenciador de pacotes rápido e eficiente
 
+## 🏗️ Arquitetura
+
+O projeto segue os princípios da Clean Architecture, dividido em três camadas principais:
+
+### 1. Domain Layer
+- Contém a lógica de negócio central
+- Entidades e objetos de valor
+- Interfaces dos repositórios
+- Independente de frameworks e infraestrutura
+
+### 2. Application Layer
+- Regras de negócio específicas da aplicação
+- Casos de uso
+- DTOs
+- Orquestra a camada de domínio
+
+### 3. Infrastructure Layer
+- Implementações concretas
+- Acesso ao banco de dados
+- Controllers NestJS
+- Serviços externos
+
+## 📁 Estrutura do Projeto
+
+```
+src/
+├── shared/           # Código compartilhado entre módulos
+│   ├── application/  # DTOs e casos de uso compartilhados
+│   ├── domain/       # Entidades e interfaces compartilhadas
+│   └── infrastructure/ # Implementações compartilhadas
+├── users/           # Módulo de usuários
+│   ├── application/ # Casos de uso e DTOs
+│   ├── domain/      # Entidades e interfaces
+│   └── infrastructure/ # Implementações
+└── main.ts          # Ponto de entrada da aplicação
+```
+
+## 🛠️ Configuração do Ambiente
+
+### Pré-requisitos
+
+- Node.js (versão LTS recomendada)
+- PNPM
+- Docker e Docker Compose
+
+### Instalação
+
+1. Clone o repositório:
 ```bash
-$ pnpm install
+git clone [URL_DO_REPOSITÓRIO]
 ```
 
-## Compile and run the project
-
+2. Instale as dependências:
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+pnpm install
 ```
 
-## Run tests
-
+3. Configure as variáveis de ambiente:
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+cp .env.example .env
 ```
 
-## Project Structure
-This project is structured following the principles of Clean Architecture. The main layers are:
-
-- **Domain:** Contains the core business logic, entities, value objects, and interfaces for repositories. This layer is independent of any framework or infrastructure.
-- **Application:** Contains the application-specific business rules. This layer orchestrates the domain layer to perform use cases. It includes DTOs and use case classes.
-- **Infrastructure:** Contains the implementation details, such as database access, external services, and framework-specific code (NestJS controllers, modules, etc.). This layer depends on the domain and application layers.
-
-The project is organized into modules based on features (e.g., `users`). Each feature module has its own domain, application, and infrastructure layers.
-
-Here's a breakdown of the directory structure:
-
+4. Inicie o banco de dados com Docker:
 ```bash
-├── .editorconfig
-├── .env.example
-├── .gitignore
-├── .prettierrc
-├── Dockerfile
-├── README.md
-├── docker-compose.yml
-├── eslint.config.mjs
-├── jest.config.ts
-├── jest.int.config.ts
-├── nest-cli.json
-├── package.json
-├── pnpm-lock.yaml
-├── src
-    ├── app.controller.spec.ts
-    ├── app.controller.ts
-    ├── app.module.ts
-    ├── app.service.ts
-    ├── main.ts
-    ├── shared
-    │   ├── application
-    │   │   ├── dtos
-    │   │   │   ├── pagination-output.ts
-    │   │   │   ├── search-input.ts
-    │   │   │   └── unit
-    │   │   │   │   └── pagination-output.spec.ts
-    │   │   ├── errors
-    │   │   │   ├── bad-request-error.ts
-    │   │   │   ├── invalid-credentials-error.ts
-    │   │   │   └── invalid-password-error.ts
-    │   │   ├── providers
-    │   │   │   └── hash-provider.ts
-    │   │   └── usecases
-    │   │   │   └── use-case.ts
-    │   ├── domain
-    │   │   ├── entity
-    │   │   │   ├── __tests__
-    │   │   │   │   └── unit
-    │   │   │   │   │   └── entity.spec.ts
-    │   │   │   ├── entity.ts
-    │   │   │   └── validators
-    │   │   │   │   ├── __tests__
-    │   │   │   │       ├── integration
-    │   │   │   │       │   └── class-validator-fields.int.spec.ts
-    │   │   │   │       └── unit
-    │   │   │   │       │   └── class-validator-fields.spec.ts
-    │   │   │   │   ├── class-validator-fields.ts
-    │   │   │   │   └── validator-fields.interface.ts
-    │   │   ├── errors
-    │   │   │   ├── conflict-error.ts
-    │   │   │   ├── not-found-error.ts
-    │   │   │   └── validation-error.ts
-    │   │   └── repositories
-    │   │   │   ├── __tests__
-    │   │   │       └── unit
-    │   │   │       │   ├── in-memory-searchable.repository.spec.ts
-    │   │   │       │   ├── in-memory.repository.spec.ts
-    │   │   │       │   └── searchable-repository-contracts.spec.ts
-    │   │   │   ├── in-memory-searchable.repository.ts
-    │   │   │   ├── in-memory.repository.ts
-    │   │   │   ├── repository-contracts.ts
-    │   │   │   └── searchable-repository-contracts.ts
-    │   └── infrastructure
-    │   │   ├── database
-    │   │       ├── database.module.ts
-    │   │       └── prisma
-    │   │       │   ├── migrations
-    │   │       │       ├── 20250423023938_create_users_table
-    │   │       │       │   └── migration.sql
-    │   │       │       └── migration_lock.toml
-    │   │       │   ├── prisma.service.ts
-    │   │       │   ├── schema.prisma
-    │   │       │   └── testing
-    │   │       │       └── setup-prisma-tests.ts
-    │   │   └── env-config
-    │   │       ├── __tests__
-    │   │           └── unit
-    │   │           │   └── env-config.service.spec.ts
-    │   │       ├── env-config-interface.ts
-    │   │       ├── env-config.module.ts
-    │   │       └── env-config.service.ts
-    └── users
-    │   ├── application
-    │       ├── dtos
-    │       │   ├── __tests__
-    │       │   │   └── unit
-    │       │   │   │   └── user-output.spec.ts
-    │       │   └── user-output.ts
-    │       └── usecases
-    │       │   ├── __tests__
-    │       │       ├── integration
-    │       │       │   ├── delete-user.usecase.int-spec.ts
-    │       │       │   ├── get-user.usecase.int-spec.ts
-    │       │       │   └── signup.usecase.int-spec.ts
-    │       │       └── unit
-    │       │       │   ├── delete-user.usecase.spec.ts
-    │       │       │   ├── get-user.usecase.spec.ts
-    │       │       │   ├── listusers.usecase.spec.ts
-    │       │       │   ├── signin.usecase.spec.ts
-    │       │       │   ├── signup.usecase.spec.ts
-    │       │       │   ├── update-password.usecase.spec.ts
-    │       │       │   └── update-user.usecase.spec.ts
-    │       │   ├── delete-user.usecase.ts
-    │       │   ├── get-user.usecase.ts
-    │       │   ├── listusers.usecase.ts
-    │       │   ├── signin.usecase.ts
-    │       │   ├── signup.usecase.ts
-    │       │   ├── update-password.usecase.ts
-    │       │   └── update-user.usecase.ts
-    │   ├── domain
-    │       ├── entities
-    │       │   ├── __tests__
-    │       │   │   ├── integration
-    │       │   │   │   └── user.entity.int-spec.ts
-    │       │   │   └── unit
-    │       │   │   │   └── user.entity.spec.ts
-    │       │   └── user.entity.ts
-    │       ├── repositories
-    │       │   └── user.repository.ts
-    │       ├── testing
-    │       │   └── helpers
-    │       │   │   └── user-data-builder.ts
-    │       └── validators
-    │       │   ├── __tests__
-    │       │       └── unit
-    │       │       │   └── user.validator.spec.ts
-    │       │   └── user.validator.ts
-    │   └── infrastructure
-    │       ├── __tests__
-    │           └── unit
-    │           │   └── users.controller.spec.ts
-    │       ├── database
-    │           ├── in-memory
-    │           │   └── repositories
-    │           │   │   ├── __tests__
-    │           │   │       └── unit
-    │           │   │       │   └── user-in-memory.repository.spec.ts
-    │           │   │   └── user-in-memory.repository.ts
-    │           └── prisma
-    │           │   ├── models
-    │           │       ├── __tests
-    │           │       │   └── integration
-    │           │       │   │   └── user-model.mapper.int-spec.ts
-    │           │       └── user-model.mapper.ts
-    │           │   └── repositories
-    │           │       ├── __tests__
-    │           │           └── integration
-    │           │           │   └── user-prisma.repository.int-spec.ts
-    │           │       └── user-prisma.repository.ts
-    │       ├── dtos
-    │           ├── list-users.dto.ts
-    │           ├── signin.dto.ts
-    │           ├── signup.dto.ts
-    │           ├── update-password.dto.ts
-    │           └── update-user.dto.ts
-    │       ├── providers
-    │           └── hash-provider
-    │           │   ├── __tests__
-    │           │       └── unit
-    │           │       │   └── bcryptjs-hash.provider.spec.ts
-    │           │   └── bcryptjs-hash.provider.ts
-    │       ├── users.controller.ts
-    │       └── users.module.ts
-├── test
-    └── jest-e2e.json
-├── tsconfig.build.json
-└── tsconfig.json
-
+docker-compose up -d
 ```
 
-## Configuration
+## 🚀 Executando o Projeto
 
-The project uses `ts-jest` for testing. The configuration can be found in `jest.config.ts`:
-
-```ts
-import { pathsToModuleNameMapper } from 'ts-jest';
-import { compilerOptions } from './tsconfig.json';
-
-export default {
-  moduleFileExtensions: ['js', 'json', 'ts'],
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
-    prefix: '<rootDir>/',
-  }),
-  testRegex: '.*\\..*spec\\.ts$',
-  transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
-  },
-  collectCoverageFrom: ['**/*.(t|j)s'],
-  coverageDirectory: '../coverage',
-  testEnvironment: 'node',
-};
+### Desenvolvimento
+```bash
+pnpm run start:dev
 ```
 
-## License
+### Produção
+```bash
+pnpm run build
+pnpm run start:prod
+```
 
-Nest is [MIT licensed](LICENSE).
+## 🧪 Testes
+
+### Testes Unitários
+```bash
+pnpm run test
+```
+
+### Testes de Integração
+```bash
+pnpm run test:int
+```
+
+### Testes E2E
+```bash
+pnpm run test:e2e
+```
+
+### Cobertura de Testes
+```bash
+pnpm run test:cov
+```
+
+## 📦 Docker
+
+### Construir a imagem
+```bash
+docker build -t nestjs-clean-arch .
+```
+
+### Executar com Docker Compose
+```bash
+docker-compose up
+```
+
+## 📚 Documentação da API
+
+A documentação da API está disponível em `/api` quando o servidor estiver em execução.
+
+## 🤝 Contribuindo
+
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📝 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## 👥 Autores
+
+- Seu Nome - [@gumeeee](https://github.com/gumeeee)
+
+## 🙏 Agradecimentos
+
+- [NestJS](https://nestjs.com/)
+- [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- [Prisma](https://www.prisma.io/)
