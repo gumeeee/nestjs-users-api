@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 type GenerateJwtProps = {
-  acessToken: string;
+  accessToken: string;
 };
 
 @Injectable()
@@ -14,9 +14,9 @@ export class AuthService {
   ) {}
 
   async generateJwt(userId: string): Promise<GenerateJwtProps> {
-    const acessToken = await this.jwtService.signAsync({ id: userId }, {});
+    const accessToken = await this.jwtService.signAsync({ id: userId }, {});
 
-    return { acessToken };
+    return { accessToken };
   }
 
   async verifyJwt(token: string) {

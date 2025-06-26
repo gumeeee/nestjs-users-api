@@ -12,7 +12,7 @@ export class WrapperDataInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map(body => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return !body || 'acessToken' in body || 'meta' in body
+        return !body || 'accessToken' in body || 'meta' in body
           ? body
           : // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             { data: body };
