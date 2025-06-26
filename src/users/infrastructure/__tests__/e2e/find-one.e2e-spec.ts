@@ -64,8 +64,6 @@ describe('UsersController e2e tests', () => {
       })
       .expect(200);
 
-    console.log(loginResponse.body);
-
     accessToken = loginResponse.body.accessToken;
   });
 
