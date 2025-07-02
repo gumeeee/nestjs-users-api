@@ -32,12 +32,20 @@ jobs:
 
       - run: pnpm prisma generate --schema ./src/shared/infrastructure/database/prisma/schema.prisma
         env:
-          DATABASE_URL: "postgresql://postgres:docker@localhost:5432/projectdb?schema=public"
+          DATABASE_URL: 'postgresql://postgres:docker@localhost:5432/projectdb?schema=public'
 
-      - run: pnpm run test:unit
+      - run: pnpm run test:int
         env:
           PORT: 3000
           NODE_ENV: test
           JWT_SECRET: fake_secret
           JWT_EXPIRES_IN: 86400
-          DATABASE_URL: fake_url
+          DATABASE_URL: 'postgresql://postgres:docker@localhost:5432/projectdb?schema=public'
+
+      - run: pnpm run test:e2e
+        env:
+          PORT: 3000
+          NODE_ENV: test
+          JWT_SECRET: fake_secret
+          JWT_EXPIRES_IN: 86400
+          DATABASE_URL: 'postgresql://postgres:docker@localhost:5432/projectdb?schema=public'
