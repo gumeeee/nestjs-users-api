@@ -133,21 +133,24 @@ describe('Searchable Repository unit tests', () => {
         { filter: undefined as any, expected: null },
         { filter: '', expected: null },
         { filter: 'teste', expected: 'teste' },
-        { filter: 0, expected: '0' },
-        { filter: -15, expected: '-15' },
-        { filter: 7.7, expected: '7.7' },
-        { filter: true, expected: 'true' },
-        { filter: false, expected: 'false' },
-        { filter: {}, expected: '[object Object]' },
-        { filter: 1, expected: '1' },
-        { filter: 2, expected: '2' },
-        { filter: 20, expected: '20' },
+        { filter: 0, expected: 0 },
+        { filter: -15, expected: -15 },
+        { filter: 7.7, expected: 7.7 },
+        { filter: true, expected: true },
+        { filter: false, expected: false },
+        { filter: {}, expected: {} },
+        { filter: 1, expected: 1 },
+        { filter: 2, expected: 2 },
+        { filter: 20, expected: 20 },
       ];
 
       params.forEach(param => {
-        expect(new SearchParams({ filter: param.filter }).filter).toBe(
-          param.expected,
-        );
+        const result = new SearchParams({ filter: param.filter }).filter;
+        if (typeof param.expected === 'object' && param.expected !== null) {
+          expect(result).toStrictEqual(param.expected);
+        } else {
+          expect(result).toBe(param.expected);
+        }
       });
     });
   });
